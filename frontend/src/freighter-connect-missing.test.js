@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { isConnectedMock, setAllowedMock, getAddressMock, signTransactionMock } = vi.hoisted(() => ({
-  isConnectedMock: vi.fn(),
-  setAllowedMock: vi.fn(),
-  getAddressMock: vi.fn(),
-  signTransactionMock: vi.fn(),
-}));
+const { isConnectedMock, setAllowedMock, getAddressMock, signTransactionMock } =
+  vi.hoisted(() => ({
+    isConnectedMock: vi.fn(),
+    setAllowedMock: vi.fn(),
+    getAddressMock: vi.fn(),
+    signTransactionMock: vi.fn(),
+  }));
 
 vi.mock("@stellar/freighter-api", () => ({
   isConnected: isConnectedMock,
@@ -35,7 +36,7 @@ vi.mock("@stellar/stellar-sdk", async (importOriginal) => {
 
 const { connectFreighterWallet } = await import("./freighter");
 
-describe("connectFreighterWallet", () => {
+describe("connectFreighterWallet when Freighter is missing", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -44,10 +45,8 @@ describe("connectFreighterWallet", () => {
     vi.restoreAllMocks();
   });
 
-  it("rejects with 'Freighter is not installed' when isConnected returns isConnected false", async () => {
-    // Mock isConnected to return not connected
+  it("rejects with Freighter is not installed when isConnected resolves isConnected false", async () => {
     isConnectedMock.mockResolvedValueOnce({ isConnected: false });
-    // setAllowed and getAddress should not be called
 
     await expect(connectFreighterWallet()).rejects.toThrow(
       "Freighter is not installed. Get it from freighter.app, set Testnet, then refresh."

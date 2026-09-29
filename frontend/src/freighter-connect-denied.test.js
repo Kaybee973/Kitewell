@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { isConnectedMock, setAllowedMock, getAddressMock, signTransactionMock } = vi.hoisted(() => ({
-  isConnectedMock: vi.fn(),
-  setAllowedMock: vi.fn(),
-  getAddressMock: vi.fn(),
-  signTransactionMock: vi.fn(),
-}));
+const { isConnectedMock, setAllowedMock, getAddressMock, signTransactionMock } =
+  vi.hoisted(() => ({
+    isConnectedMock: vi.fn(),
+    setAllowedMock: vi.fn(),
+    getAddressMock: vi.fn(),
+    signTransactionMock: vi.fn(),
+  }));
 
 vi.mock("@stellar/freighter-api", () => ({
   isConnected: isConnectedMock,
@@ -35,7 +36,7 @@ vi.mock("@stellar/stellar-sdk", async (importOriginal) => {
 
 const { connectFreighterWallet } = await import("./freighter");
 
-describe("connectFreighterWallet", () => {
+describe("connectFreighterWallet permission denial", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -45,11 +46,8 @@ describe("connectFreighterWallet", () => {
   });
 
   it("rejects with Connection denied when setAllowed returns isAllowed false", async () => {
-    // Mock isConnected to return connected
     isConnectedMock.mockResolvedValueOnce({ isConnected: true });
-    // Mock setAllowed to return not allowed
     setAllowedMock.mockResolvedValueOnce({ isAllowed: false });
-    // getAddress should not be called (no need to mock, just assert not called)
 
     await expect(connectFreighterWallet()).rejects.toThrow(
       "Connection denied. Allow Kitewell in Freighter to continue."

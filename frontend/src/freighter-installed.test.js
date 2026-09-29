@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { isConnectedMock, setAllowedMock, getAddressMock, signTransactionMock } = vi.hoisted(() => ({
-  isConnectedMock: vi.fn(),
-  setAllowedMock: vi.fn(),
-  getAddressMock: vi.fn(),
-  signTransactionMock: vi.fn(),
-}));
+const { isConnectedMock, setAllowedMock, getAddressMock, signTransactionMock } =
+  vi.hoisted(() => ({
+    isConnectedMock: vi.fn(),
+    setAllowedMock: vi.fn(),
+    getAddressMock: vi.fn(),
+    signTransactionMock: vi.fn(),
+  }));
 
 vi.mock("@stellar/freighter-api", () => ({
   isConnected: isConnectedMock,
@@ -44,14 +45,14 @@ describe("checkFreighterInstalled", () => {
     vi.restoreAllMocks();
   });
 
-  it("returns true when isConnected returns isConnected true", async () => {
+  it("resolves true when isConnected resolves isConnected true", async () => {
     isConnectedMock.mockResolvedValueOnce({ isConnected: true });
     const result = await checkFreighterInstalled();
     expect(result).toBe(true);
     expect(isConnectedMock).toHaveBeenCalledTimes(1);
   });
 
-  it("returns false when isConnected returns isConnected false", async () => {
+  it("resolves false when isConnected resolves isConnected false", async () => {
     isConnectedMock.mockResolvedValueOnce({ isConnected: false });
     const result = await checkFreighterInstalled();
     expect(result).toBe(false);
